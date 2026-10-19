@@ -2,13 +2,19 @@ import { SITE, SOURCE_DEFAULTS } from "@aihot/site";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/source-new";
-import type { AdminSourceCreated, AdminSourcePreview } from "@aihot/contracts/admin";
+import type { AdminSettings, AdminSourceCreated, AdminSourcePreview } from "@aihot/contracts/admin";
+import { adminGet } from "../../lib/admin.server";
 import { useAdminAction } from "../../features/admin/action";
 import { bj } from "../../features/admin/format";
 import { KIND_LABEL, MODE_LABEL, TIER_LABEL } from "../../features/admin/labels";
 import { AdminPage, Button, Card, Empty, Field, Input, Select, Textarea } from "../../features/admin/ui";
 
 export const meta: Route.MetaFunction = () => [{ title: `新建信源 · ${SITE.name} 后台` }];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const settings = await adminGet<AdminSettings>(request, "/api/admin/settings");
+  return settings.collection;
+}
 
 const TEMPLATES: Record<string, Record<string, unknown>> = {
   rss: { feedUrl: "https://example.com/feed.xml" },
@@ -20,10 +26,10 @@ const TEMPLATES: Record<string, Record<string, unknown>> = {
 };
 
 
-export default function NewSource() {
+export default function NewSource({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const { run, pending } = useAdminAction();
-  const [form, setForm] = useState({ id: "", name: "", kind: "rss", tier: "T2", participation_mode: "editorial", interval_minutes: 30, first_party: false, site_fulltext: SOURCE_DEFAULTS.siteFulltext, syndicate_fulltext: false, tags: "" });
+  const [form, setForm] = useState({ id: "", name: "", kind: "rss", tier: "T2", participation_mode: "editorial", interval_minutes: loaderData.intervalMinutes, first_party: false, site_fulltext: SOURCE_DEFAULTS.siteFulltext, syndicate_fulltext: false, tags: "" });
   const [config, setConfig] = useState(JSON.stringify(TEMPLATES.rss, null, 2));
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<AdminSourcePreview | null>(null);

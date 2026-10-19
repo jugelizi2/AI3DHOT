@@ -251,7 +251,7 @@ async function store(sourceId: string, runId: number, candidates: CollectionCand
 /**
  * The end of a fetch run, on the run and on its source. Success marks the source healthy and due again
  * one interval later. A failure counts toward "failing" (5 in a row) and waits longer after each one,
- * up to six hours; a full budget is not the source's failure: it waits 15 minutes and counts nothing.
+ * up to six hours or the source interval, whichever is longer; a full budget is not the source's failure: it waits 15 minutes and counts nothing.
  */
 async function recordFetch(db: Db, sourceId: string, runId: number, run: { found: number; created: number; detail: object | null } & ({ cursor: Record<string, unknown> } | { error: string; budget: boolean })): Promise<void> {
   const detail = run.detail ? db.json(run.detail as never) : null;
@@ -270,7 +270,7 @@ async function recordFetch(db: Db, sourceId: string, runId: number, run: { found
       fail_count = CASE WHEN ${run.budget} THEN fail_count ELSE fail_count + 1 END,
       last_error = ${run.error},
       health = CASE WHEN ${run.budget} THEN health WHEN fail_count + 1 >= 5 THEN 'failing' ELSE 'degraded' END,
-      next_fetch_at = now() + make_interval(mins => CASE WHEN ${run.budget} THEN 15 ELSE LEAST(interval_minutes * (fail_count + 2), 360) END),
+      next_fetch_at = now() + make_interval(mins => CASE WHEN ${run.budget} THEN 15 ELSE GREATEST(interval_minutes, LEAST(interval_minutes * (fail_count + 2), 360)) END),
       updated_at = now()
     WHERE id = ${sourceId}`;
   await db`UPDATE fetch_runs SET status = 'failed', finished_at = now(), found_count = ${run.found}, new_count = ${run.created},

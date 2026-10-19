@@ -5,11 +5,13 @@ import type { AdminBudget, AdminNotifyTarget, AdminSettings, BeforeJson } from "
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { z } from "zod";
 import { config } from "../config.ts";
 import { sql } from "../db.ts";
 import { sha256 } from "../lib/ids.ts";
 import { loadContact, type ContactSettings } from "../site/contact.ts";
 import { audit } from "../audit.ts";
+import { collectionSettings } from "../sources/settings.ts";
 
 const MAX_QR_BYTES = 2 * 1024 * 1024;
 
@@ -34,8 +36,30 @@ export async function replaceContactQr(input: { slot: keyof ContactSettings; dat
 
 /** The settings page: contact QR codes, content push targets and paid-service budgets. */
 export async function settingsOverview(): Promise<BeforeJson<AdminSettings>> {
-  const [contact, targets, budgets] = await Promise.all([loadContact(), listTargets(), listBudgets()]);
-  return { contact, targets, budgets };
+  const [contact, targets, budgets, collection] = await Promise.all([loadContact(), listTargets(), listBudgets(), collectionSettings()]);
+  return { contact, targets, budgets, collection };
+}
+
+const COLLECTION = z.object({ intervalMinutes: z.number().int().min(1).max(1440) }).strict();
+
+/** Apply a global interval to feeds and listings, retaining enablement and collection cursors. */
+export async function updateCollectionSettings(input: unknown, actor: string) {
+  const next = COLLECTION.parse(input);
+  return sql.begin(async tx => {
+    // Source intake uses this same lock, so a new source cannot miss the default change.
+    await tx`SELECT pg_advisory_xact_lock(hashtext('admin-source-identity'))`;
+    const before = await collectionSettings(tx);
+    const sourcesBefore = await tx`SELECT id, interval_minutes, next_fetch_at FROM sources
+      WHERE kind IN ('rss', 'web_list', 'json_list') FOR UPDATE`;
+    await tx`INSERT INTO settings (key, value, updated_by) VALUES ('collection', ${tx.json(next)}, ${actor})
+      ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value, updated_by=EXCLUDED.updated_by, updated_at=now()`;
+    const sourcesAfter = await tx`UPDATE sources SET interval_minutes=${next.intervalMinutes},
+      next_fetch_at=GREATEST(COALESCE(last_fetch_at, now()) + make_interval(mins => ${next.intervalMinutes}), now()), updated_at=now()
+      WHERE kind IN ('rss', 'web_list', 'json_list') RETURNING id, interval_minutes, next_fetch_at`;
+    await audit(actor, 'settings.collection', 'settings:collection', '调整全站抓取频率',
+      { ...before, sources: sourcesBefore }, { ...next, sources: sourcesAfter }, { db: tx });
+    return next;
+  });
 }
 
 export async function listTargets(): Promise<BeforeJson<AdminNotifyTarget>[]> {

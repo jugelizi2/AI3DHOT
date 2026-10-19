@@ -337,6 +337,7 @@ export interface AdminBudget {
 }
 
 export interface AdminSettings {
+  collection: { intervalMinutes: number };
   contact: { wechatQr: string | null; feishuQr: string | null };
   targets: AdminNotifyTarget[];
   budgets: AdminBudget[];

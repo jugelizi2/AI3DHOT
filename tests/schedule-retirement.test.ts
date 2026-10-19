@@ -15,7 +15,7 @@ after(async () => { await stopBoss(); await closeDb(); });
 test("retired schedules leave the current overview and execution queues while live jobs and history remain", async () => {
   let externalJobs = ["external.kept", "kept", "external.kept"];
   const boss = await getBoss();
-  const retired = ["cron.retired.scheduled", "cron.retired.unscheduled", "cron.paused", "cron.renamed.old"];
+  const retired = ["cron.retired.scheduled", "cron.retired.unscheduled", "cron.paused", "cron.renamed.old", "cron.sources.adapt-intervals"];
   for (const name of [...retired, "cron.kept", "cron.renamed.new", "business.kept"]) {
     await boss.createQueue(name);
     await boss.send(name, { fixture: true }, { startAfter: "2099-01-01" });

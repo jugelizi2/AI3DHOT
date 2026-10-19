@@ -1,7 +1,7 @@
 // Collection picks up where it stopped: an X search longer than one run continues in later runs until
 // it meets the old watermark (no post in between is skipped, no page is bought twice). The watermark
 // alone bounds it: posts made weeks before the account was added are kept too.
-import { stub, tag } from "./setup.ts";
+import { Reply, stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { config } from "@aihot/backend/config";
@@ -65,4 +65,20 @@ test("an X search longer than one run is read to the old watermark over the next
   assert.equal(await stored(), 45, "every post between the old watermark and the newest is stored");
   assert.equal((await cursor()).xBacklog, undefined, "nothing is left to read");
   assert.equal(socialdata.hits(), 20 + 1 + 3, "no page is requested twice");
+});
+
+test("failed collection never retries sooner than a source's interval", async () => {
+  const server = await stub(() => new Reply(403, { error: "forbidden" }));
+  try {
+    for (const [interval, expected] of [[30, 60], [1440, 1440]]) {
+      const id = `daily-failure-${interval}-${T}`;
+      await sql`INSERT INTO sources (id, name, kind, config, interval_minutes)
+        VALUES (${id}, 'Failed feed', 'rss', ${sql.json({ feedUrl: server.url })}, ${interval!})`;
+      assert.equal((await collectSource(id, { force: true })).status, "failed");
+      const [row] = await sql`SELECT extract(epoch FROM (next_fetch_at - last_fetch_at)) / 60 AS minutes FROM sources WHERE id = ${id}`;
+      assert.equal(Number(row!.minutes), expected);
+    }
+  } finally {
+    await server.close();
+  }
 });

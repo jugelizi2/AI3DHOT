@@ -1,6 +1,7 @@
 // Cron-style schedules (Asia/Shanghai), the engine's and then the site's modules'. Each run is recorded in
 // job_runs; missed slots run once.
 import type { PgBoss } from "pg-boss";
+import { SOURCE_DEFAULTS } from "@aihot/site";
 import { ensureQueue, recordRun } from "@aihot/backend/jobs/queue";
 import { serverModules, type Scheduled } from "@aihot/backend/modules";
 import { sweepUnprocessed } from "@aihot/backend/jobs/content";
@@ -51,7 +52,7 @@ const ENGINE_SCHEDULES: Scheduled[] = [
   ...(collecting
     ? [
         { name: "sources.schedule", cron: "* * * * *", run: () => scheduleDueSources() },
-        { name: "sources.adapt-intervals", cron: "20 4 * * *", run: adaptIntervals },
+        { name: "sources.adapt-intervals", cron: "20 4 * * *", when: () => SOURCE_DEFAULTS.autoAdjustInterval, run: adaptIntervals },
         // X accounts quiet for a day: a renamed one is followed to its new handle (SocialData, paid per lookup).
         { name: "sources.x-renames", cron: "50 4 * * *", missed: "once" as const, run: () => followXRenames() },
         // Icons are read from the sources' own sites, so they stop with collection.

@@ -5,7 +5,7 @@ import type { AdminSettings } from "@aihot/contracts/admin";
 import { adminGet } from "../../lib/admin.server";
 import { useAdminAction } from "../../features/admin/action";
 import { bj, num } from "../../features/admin/format";
-import { AdminPage, Badge, Button, Card, DataTable, Input, ReasonDialog } from "../../features/admin/ui";
+import { AdminPage, Badge, Button, Card, DataTable, Field, Input, ReasonDialog, Select } from "../../features/admin/ui";
 import { toast } from "../../features/admin/toast";
 
 
@@ -14,6 +14,31 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export const meta: Route.MetaFunction = () => [{ title: `设置 · ${SITE.name} 后台` }];
+
+function CollectionSettings({ collection }: { collection: AdminSettings["collection"] }) {
+  const [minutes, setMinutes] = useState(collection.intervalMinutes);
+  const { run, pending } = useAdminAction();
+  const presets = [[1440, "每天一次"], [720, "每 12 小时"], [360, "每 6 小时"], [240, "每 4 小时"], [60, "每小时"]] as const;
+  const valid = Number.isInteger(minutes) && minutes >= 1 && minutes <= 1440;
+  return (
+    <Card title="抓取频率" className="mb-5">
+      <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+        <Field label="常用频率">
+          <Select value={presets.some(([value]) => value === minutes) ? minutes : "custom"} onChange={e => setMinutes(e.target.value === "custom" ? 0 : Number(e.target.value))}>
+            {presets.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            <option value="custom">自定义间隔</option>
+          </Select>
+        </Field>
+        <Field label="采集间隔（分钟）">
+          <Input type="number" min={1} max={1440} value={minutes || ""} onChange={e => setMinutes(Number(e.target.value))} />
+        </Field>
+        <Button tone="primary" disabled={!valid || minutes === collection.intervalMinutes} busy={pending === "collection"}
+          onClick={() => run("PUT", "/api/admin/settings/collection", { intervalMinutes: minutes }, { label: "collection", success: "抓取频率已更新" })}>保存抓取频率</Button>
+      </div>
+      <p className="mt-3 text-[13px] text-ink-3">支持 1～1440 分钟，1440 为每天一次。保存后统一调整 RSS、网页和 JSON 来源，并重新安排下次抓取；新建来源沿用此间隔。也可在信源详情页单独调整。</p>
+    </Card>
+  );
+}
 
 function QrSlot({ slot, label, src }: { slot: "wechatQr" | "feishuQr"; label: string; src: string | null }) {
   const { run, pending } = useAdminAction();
@@ -102,7 +127,8 @@ function TargetToggle({ t }: { t: AdminSettings["targets"][number] }) {
 export default function SettingsAdmin({ loaderData: s }: Route.ComponentProps) {
   return (
     <AdminPage title="设置" subtitle="不改代码即可替换的运营设置。每次修改都写入审计记录。">
-      <div className="grid gap-5 xl:grid-cols-2">
+      <CollectionSettings key={s.collection.intervalMinutes} collection={s.collection} />
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <Card title="关于页二维码">
           <div className="space-y-5">
             <QrSlot slot="wechatQr" label="微信公众号二维码" src={s.contact.wechatQr} />

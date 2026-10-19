@@ -14,7 +14,7 @@ import { banFeedbackEmail, banSource, eraseFeedback, feedbackScreenshot, listFee
 import { requeueFailedArticles, runsOverview } from "@aihot/backend/admin/runs";
 import { resolveDelivery } from "@aihot/backend/notify/deliver";
 import { releaseReceipt } from "@aihot/backend/operations/recover";
-import { replaceContactQr, setTargetEnabled, settingsOverview, updateBudget } from "@aihot/backend/admin/settings";
+import { replaceContactQr, setTargetEnabled, settingsOverview, updateBudget, updateCollectionSettings } from "@aihot/backend/admin/settings";
 import { createSource, fetchNow, listSources, previewSource, previewStoredSource, sourceDetail, updateSource } from "@aihot/backend/admin/sources";
 import { sendProblem } from "../http/respond.ts";
 import { adminHandler } from "./admin-auth.ts";
@@ -35,6 +35,7 @@ function decodeImage(dataUrl: unknown): Buffer {
 }
 
 export function registerAdmin(app: FastifyInstance) {
+  app.put("/api/admin/settings/collection", adminHandler(async (req, _reply, admin) => updateCollectionSettings(body(req), actorOf(admin))));
   // Sources
   app.get("/api/admin/sources", adminHandler(async (req) => {
     const f = q(req);

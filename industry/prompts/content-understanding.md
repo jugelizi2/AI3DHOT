@@ -18,7 +18,7 @@
 - `opinion_analysis`：观点、行业判断、复盘或长访谈
 - `tutorial_explainer`：教程、科普、解读或评测
 
-优先级：发了模型选 model_release；发了工具选 product_launch；发了 Prompt 或方法选 tool_or_prompt；论文优先 research_paper；评测选 tutorial_explainer。原文把发布写成过去的事、本条在讲用法或做演示时，不算本次发布，选 tutorial_explainer。
+优先级：发布了可识别的机器学习/三维生成模型或权重才选 model_release，生成了一个三维资产不算模型发布；发了工具选 product_launch；发了 Prompt 或方法选 tool_or_prompt；论文优先 research_paper；评测选 tutorial_explainer。原文把发布写成过去的事、本条在讲用法或做演示时，不算本次发布，选 tutorial_explainer。
 
 输出前检查 `itemType` 与第一个分类标签是否自洽：`model_release` 对应“模型发布”，`product_launch` 对应“产品更新”，`research_paper` 对应“论文/研究”，`industry_event` 对应“行业动态”或“政策/监管”，`opinion_analysis` 对应“大佬观点”或“现象/趋势”，`tutorial_explainer` 对应“教程/实践”或“评测/基准”。如果二者冲突，按当前材料的核心事件修正后再输出。
 
@@ -36,10 +36,10 @@
 
 其后可选 0–5 个适用标签，并且只能来自以下两个白名单：
 
-- 主题：Agent、编码、推理、多模态、语音、视频、图像生成、RAG、端侧、数据/训练、搜索、部署/工程、开源生态、具身智能、MCP/工具调用
-- 实体：OpenAI、Anthropic、DeepSeek、DeepMind、Google、Meta、Microsoft、xAI、Hugging Face、GitHub、arXiv
+- 主题：Agent、编码、多模态、数据/训练、部署/工程、开源生态、MCP/工具调用、CAD、CAE、CAM、BIM、DCC、生成式3D、三维重建、空间智能、Text-to-CAD、参数化建模、几何内核、B-Rep、NURBS、网格/拓扑、3DGS、NeRF、Scan-to-CAD、点云、纹理/材质、绑定/动画、仿真/优化、制造/3D打印、数字孪生、Blender、Rhino/Grasshopper、USD/互操作
+- 实体：OpenAI、Anthropic、DeepSeek、Google、Meta、Microsoft、Hugging Face、GitHub、arXiv、Meshy、Tripo、Hyper3D、Zoo、Backflip、Adam、Autodesk、McNeel、Blender、SimScale、Sloyd、Shapr3D、Onshape、Siemens、Dassault Systèmes、腾讯混元、World Labs、arXiv
 
-正文中即使明确出现了 NVIDIA、Apple、阿里等其他实体，也不要把它们放进 `tags`。不要创造白名单之外的标签。没有适用的主题或实体时，只返回第一个分类标签；例如学校限制 AI 使用的监管新闻，不需要强行归到“编码”或“推理”。
+正文明确出现的主体，只有在实体白名单里才放进 tags；没有适用主题或实体时只返回第一个分类标签，不创造标签或强行归类。
 
 ## 候选阅读价值
 
@@ -50,6 +50,8 @@
 材料只有下载口号、标题、营销话术，或无法支持任何具体阅读价值时，`editorialJudgment` 必须返回空字符串；宁可不展示，也不要编造价值或写成劝退式审稿意见。是否为空不改变其他字段，也不影响系统的精选计算。
 
 ## 中文标题和摘要
+
+面向建模师、产品经理和工程师，先说明发生了什么，再给输入输出、编辑能力或工作流变化中最重要的一层细节，最后保留原文明确的限制。厂商宣称、研究演示与实测结果分清；看不到三维输出、几何验证或制造证据时不推导这些能力。
 
 `titleZh` 必须是自洽的中文标题，包含事件主体以及动作或结果。保留必要的模型名、产品名、版本号、机构名和关键数字，不写“最新动态”“引发关注”等空话。原标题已经是中文时也要保证脱离来源名后仍能独立理解。
 

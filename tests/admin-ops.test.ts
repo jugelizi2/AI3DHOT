@@ -10,6 +10,8 @@ import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { pushSelected } from "@aihot/backend/notify/selected";
 import { publishArticle } from "@aihot/backend/publication/publish";
+import { settingsOverview, updateCollectionSettings } from "@aihot/backend/admin/settings";
+import { createSource } from "@aihot/backend/admin/sources";
 
 const T = tag();
 const SOURCE = `test-ops-${T}`;
@@ -67,4 +69,49 @@ test("the content group gets first-party and near-first-party sources only", asy
   await sql`UPDATE articles SET grouping_status = 'complete', grouped_at = now() WHERE id = ${articleId}`;
   await publishArticle(articleId);
   assert.deepEqual(await pushSelected(articleId), { status: "skipped", reason: "not a first-party source" });
+});
+
+test("collection settings reschedule sources, preserve their state and become the intake default", async () => {
+  const id = `daily-${T}`;
+  const x = `paused-x-${T}`;
+  await sql`INSERT INTO sources (id, name, kind, enabled, interval_minutes, last_fetch_at, next_fetch_at, cursor) VALUES
+    (${id}, 'Daily feed', 'rss', false, 60, now(), now() + interval '1 hour', '{"initializedAt":"2026-10-01"}'),
+    (${x}, 'Paused account', 'x_search', false, 240, NULL, NULL, NULL)`;
+  for (const intervalMinutes of [0, 1441, 1.5]) await assert.rejects(updateCollectionSettings({ intervalMinutes }, "test"));
+  await updateCollectionSettings({ intervalMinutes: 1440 }, "test-daily");
+  assert.equal((await settingsOverview()).collection.intervalMinutes, 1440);
+  const [row] = await sql`SELECT enabled, interval_minutes, cursor,
+    extract(epoch FROM (next_fetch_at - last_fetch_at)) / 60 AS delay FROM sources WHERE id=${id}`;
+  assert.equal(row!.enabled, false);
+  assert.equal(row!.interval_minutes, 1440);
+  assert.equal(Number(row!.delay), 1440);
+  assert.deepEqual(row!.cursor, { initializedAt: "2026-10-01" });
+  assert.equal((await sql`SELECT interval_minutes FROM sources WHERE id=${x}`)[0]!.interval_minutes, 240);
+  const create = (suffix: string, interval_minutes?: number) => createSource({ id: `intake-daily-${suffix}-${T}`, name: suffix,
+    kind: "rss", config: { feedUrl: `https://example.com/daily-${suffix}-${T}.xml` }, interval_minutes }, "test");
+  await updateCollectionSettings({ intervalMinutes: 720 }, "test-daily");
+  const inherited = await create("inherited");
+  assert.ok(inherited.created);
+  assert.equal(inherited.source.interval_minutes, 720);
+  const explicit = await create("explicit", 30);
+  assert.ok(explicit.created);
+  assert.equal(explicit.source.interval_minutes, 30);
+  const [entry] = await sql`SELECT before, after FROM audit_log WHERE action='settings.collection' AND actor='test-daily' ORDER BY id DESC LIMIT 1`;
+  assert.equal(entry!.before.intervalMinutes, 1440);
+  assert.equal(entry!.after.intervalMinutes, 720);
+});
+
+test("an unavailable audit log rolls back collection settings and all source schedules", async () => {
+  const before = await sql`SELECT id, interval_minutes, next_fetch_at FROM sources ORDER BY id`;
+  const interval = (await settingsOverview()).collection.intervalMinutes;
+  await sql.unsafe(`CREATE FUNCTION refuse_collection_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.action = 'settings.collection' THEN RAISE EXCEPTION 'audit unavailable'; END IF; RETURN NEW; END $$`);
+  await sql.unsafe("CREATE TRIGGER refuse_collection_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION refuse_collection_audit()");
+  try {
+    await assert.rejects(updateCollectionSettings({ intervalMinutes: 360 }, "test"), /audit unavailable/);
+    assert.equal((await settingsOverview()).collection.intervalMinutes, interval);
+    assert.deepEqual(await sql`SELECT id, interval_minutes, next_fetch_at FROM sources ORDER BY id`, before);
+  } finally {
+    await sql.unsafe("DROP TRIGGER refuse_collection_audit ON audit_log; DROP FUNCTION refuse_collection_audit()");
+  }
 });

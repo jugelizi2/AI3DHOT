@@ -1,370 +1,864 @@
 {
-  "$comment": "示范信源：首次启动时导入（scripts/seed.ts），已存在的不会被覆盖。之后在后台“信源”里新建、修改和暂停。字段说明见 docs/customize.md。",
+  "$comment": "AI3DHOT 行业信源。2026-10-19 核查：免费源默认启用，小规模历史导入；X 与公众号待服务凭据和实际试抓后手动启用。详见 docs/ai3d-sources.md。种子只新增，不覆盖数据库已有设置。",
   "sources": [
     {
-      "id": "rss-openai-news",
-      "name": "OpenAI News",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-rhino",
+      "name": "Rhino News",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://openai.com/news/rss.xml",
+        "feedUrl": "https://blog.rhino3d.com/feeds/posts/default?alt=rss",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": "openai",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "owner_entity_id": "mcneel",
       "tags": [
-        "官方"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方/研究"
+      ]
     },
     {
-      "id": "rss-google-deepmind",
-      "name": "Google DeepMind",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-blender",
+      "name": "Blender Developers Blog",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://deepmind.google/blog/rss.xml",
+        "feedUrl": "https://code.blender.org/feed/",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": "google",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "owner_entity_id": "blender",
       "tags": [
-        "官方"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方/研究"
+      ]
     },
     {
-      "id": "rss-google-research",
-      "name": "Google Research",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-forma",
+      "name": "Autodesk Forma",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://research.google/blog/rss/",
+        "feedUrl": "https://blogs.autodesk.com/forma/feed/",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": "google",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "owner_entity_id": "autodesk",
       "tags": [
-        "官方",
-        "研究"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方/研究"
+      ]
     },
     {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-simscale",
+      "name": "SimScale Blog",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.simscale.com/blog/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "simscale",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-nvidia-technical",
+      "name": "NVIDIA Technical Blog",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://developer.nvidia.com/blog/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "nvidia",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-siemens-nx",
+      "name": "Siemens NX Design",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://blogs.sw.siemens.com/nx-design/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "siemens",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-siemens-cam",
+      "name": "Siemens NX Manufacturing",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://blogs.sw.siemens.com/nx-manufacturing/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "siemens",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-siemens-simcenter",
+      "name": "Siemens Simcenter",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://blogs.sw.siemens.com/simcenter/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "siemens",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-hyper3d",
+      "name": "Hyper3D / Rodin",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://hyper3d.ai/blog/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "hyper3d",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
       "id": "rss-hugging-face",
       "name": "Hugging Face Blog",
       "kind": "rss",
       "config": {
         "feedUrl": "https://huggingface.co/blog/feed.xml",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
       "owner_entity_id": "hugging-face",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
       "tags": [
-        "官方",
-        "开源"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方/研究"
+      ]
     },
     {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
       "id": "rss-microsoft-research",
       "name": "Microsoft Research",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.microsoft.com/en-us/research/feed/",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
       "owner_entity_id": "microsoft",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
       "tags": [
-        "官方",
-        "研究"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方/研究"
+      ]
     },
     {
-      "id": "rss-nvidia-blog",
-      "name": "NVIDIA Blog",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-deepmind",
+      "name": "Google DeepMind",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://blogs.nvidia.com/feed/",
+        "feedUrl": "https://deepmind.google/blog/rss.xml",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": "nvidia",
+      "owner_entity_id": "google",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
       "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-develop3d",
+      "name": "DEVELOP3D",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://develop3d.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "tags": [
+        "行业媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-voxelmatters",
+      "name": "VoxelMatters",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.voxelmatters.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "tags": [
+        "行业媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-80lv",
+      "name": "80 Level",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://80.lv/feed",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "tags": [
+        "行业媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-qbitai",
+      "name": "量子位",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.qbitai.com/feed",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": "qbitai",
+      "tags": [
+        "行业媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-cadzxw",
+      "name": "CAD自学网",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.cadzxw.com/feed",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": "cadzxw",
+      "tags": [
+        "行业媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-arxiv-cad",
+      "name": "arXiv · CAD 与几何表示",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://export.arxiv.org/api/query?search_query=all:%22text-to-cad%22+OR+all:%22CAD+generation%22+OR+all:%22B-rep%22&start=0&max_results=12&sortBy=submittedDate&sortOrder=descending",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "arxiv",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-arxiv-3d",
+      "name": "arXiv · 三维生成",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://export.arxiv.org/api/query?search_query=all:%22text-to-3d%22+OR+all:%22image-to-3d%22+OR+all:%223D+generation%22&start=0&max_results=12&sortBy=submittedDate&sortOrder=descending",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "arxiv",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-arxiv-recon",
+      "name": "arXiv · 三维重建与神经表示",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://export.arxiv.org/api/query?search_query=all:%223D+reconstruction%22+OR+all:%22Gaussian+splatting%22+OR+all:%22neural+radiance%22&start=0&max_results=12&sortBy=submittedDate&sortOrder=descending",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "arxiv",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-zoo",
+      "name": "Zoo Blog",
+      "kind": "web_list",
+      "config": {
+        "url": "https://zoo.dev/blog",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "itemSelector": "article:has(a[href^=\"/blog/\"])",
+        "linkSelector": "a[href^=\"/blog/\"]",
+        "titleSelector": "h2",
+        "publishedAtSelector": "time",
+        "allowUrlPrefixes": [
+          "https://zoo.dev/blog/"
+        ],
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "zoo",
       "tags": [
         "官方"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+      ]
     },
     {
-      "id": "rss-aws-ml",
-      "name": "AWS Machine Learning Blog",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://aws.amazon.com/blogs/machine-learning/feed/",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T1",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 120,
-      "tags": [
-        "官方",
-        "教程"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "rss-github-ai",
-      "name": "GitHub Blog · AI & ML",
-      "kind": "rss",
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-adam",
+      "name": "Adam CAD Blog",
+      "kind": "web_list",
       "config": {
-        "feedUrl": "https://github.blog/ai-and-ml/feed/",
+        "url": "https://adam.new/blog",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 12
+        },
+        "itemSelector": ".bx-card",
+        "linkSelector": "a[href^=\"/blog/\"]",
+        "titleSelector": "h2",
+        "publishedAtSelector": "time",
+        "allowUrlPrefixes": [
+          "https://adam.new/blog/"
+        ],
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": null,
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "owner_entity_id": "adam",
       "tags": [
         "官方"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+      ]
     },
     {
-      "id": "rss-mistral",
-      "name": "Mistral AI",
-      "kind": "rss",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-sloyd",
+      "name": "Sloyd Blog",
+      "kind": "web_list",
       "config": {
-        "feedUrl": "https://mistral.ai/news/rss",
+        "url": "https://www.sloyd.ai/blog",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "itemSelector": "a[href^=\"/blog/\"]:has(h3)",
+        "titleSelector": "h3",
+        "publishedAtSelector": "div.mt-5 > span:nth-child(3)",
+        "allowUrlPrefixes": [
+          "https://www.sloyd.ai/blog/"
+        ],
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": null,
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
+      "owner_entity_id": "sloyd",
       "tags": [
         "官方"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+      ]
     },
     {
-      "id": "rss-bair",
-      "name": "Berkeley AI Research",
-      "kind": "rss",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-backflip",
+      "name": "Backflip Blog",
+      "kind": "web_list",
       "config": {
-        "feedUrl": "https://bair.berkeley.edu/blog/feed.xml",
+        "url": "https://www.backflip.ai/blog",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
         "_aihot": {
-          "initialBackfillLimit": 8
-        }
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "itemSelector": "a:has(time):has(h4)",
+        "titleSelector": "h4",
+        "publishedAtSelector": "time",
+        "allowUrlPrefixes": [
+          "https://www.backflip.ai/blog/",
+          "https://www.businesswire.com/news/home/"
+        ],
+        "publisherUrlPrefixes": [
+          "https://www.backflip.ai/blog/"
+        ],
+        "detail": {
+          "maxFetches": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T1",
-      "owner_entity_id": null,
-      "participation_mode": "editorial",
-      "interval_minutes": 180,
+      "owner_entity_id": "backflip",
       "tags": [
-        "研究"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
+        "官方"
+      ]
     },
     {
-      "id": "rss-the-verge-ai",
-      "name": "The Verge · AI",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-worldlabs",
+      "name": "World Labs Research & Insights",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.worldlabs.ai/blog",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "itemSelector": "a[href^=\"/blog/\"]:has(h2)",
+        "titleSelector": "h2",
+        "publishedAtRegex": "([A-Z][a-z]+ \\d{1,2}, \\d{4})",
+        "allowUrlPrefixes": [
+          "https://www.worldlabs.ai/blog/"
+        ],
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "world-labs",
+      "tags": [
+        "官方"
+      ]
     },
     {
-      "id": "rss-techcrunch-ai",
-      "name": "TechCrunch · AI",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://techcrunch.com/category/artificial-intelligence/feed/",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-autodesk-research",
+      "name": "Autodesk Research · Featured",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.research.autodesk.com/blog/",
+        "parseMode": "html",
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 12
+        },
+        "itemSelector": ".card-featured",
+        "linkSelector": "a[href*=\"/blog/\"]",
+        "titleSelector": ".js-card-title",
+        "publishedAtRegex": "(\\d{2}/\\d{2}/\\d{4})",
+        "allowUrlPrefixes": [
+          "https://www.research.autodesk.com/blog/"
+        ],
+        "detail": {
+          "maxFetches": 3,
+          "publishedAtSelector": "meta[property=\"article:published_time\"], time",
+          "titleSelector": "h1"
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "autodesk",
+      "tags": [
+        "官方"
+      ]
     },
     {
-      "id": "rss-ars-technica-ai",
-      "name": "Ars Technica · AI",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://arstechnica.com/ai/feed/",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-meshy",
+      "name": "X：Meshy (@MeshyAI)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MeshyAI -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "meshy",
+      "tags": [
+        "官方账号"
+      ]
     },
     {
-      "id": "rss-mit-tech-review-ai",
-      "name": "MIT Technology Review · AI",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://www.technologyreview.com/topic/artificial-intelligence/feed",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 120,
-      "tags": [
-        "媒体"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-tripo",
+      "name": "X：Tripo (@tripoai)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:tripoai -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "tripo",
+      "tags": [
+        "官方账号"
+      ]
     },
     {
-      "id": "rss-the-decoder",
-      "name": "The Decoder",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://the-decoder.com/feed/",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-hyper3d",
+      "name": "X：Hyper3D / Deemos (@DeemosTech)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:DeemosTech -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "hyper3d",
+      "tags": [
+        "官方账号"
+      ]
     },
     {
-      "id": "rss-simon-willison",
-      "name": "Simon Willison",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://simonwillison.net/atom/everything/",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 120,
-      "tags": [
-        "个人"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-zoo",
+      "name": "X：Zoo (@zoodotdev)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:zoodotdev -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "zoo",
+      "tags": [
+        "官方账号"
+      ]
     },
     {
-      "id": "rss-import-ai",
-      "name": "Import AI",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://importai.substack.com/feed",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
-      },
-      "tier": "T2",
-      "owner_entity_id": null,
       "participation_mode": "editorial",
-      "interval_minutes": 180,
-      "tags": [
-        "个人",
-        "周刊"
-      ],
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-adam",
+      "name": "X：Adam (@adamdotnew)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:adamdotnew -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "adam",
+      "tags": [
+        "官方账号"
+      ]
     },
     {
-      "id": "rss-latent-space",
-      "name": "Latent Space",
-      "kind": "rss",
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-world-labs",
+      "name": "X：World Labs (@theworldlabs)",
+      "kind": "x_search",
       "config": {
-        "feedUrl": "https://www.latent.space/feed",
-        "_aihot": {
-          "initialBackfillLimit": 8
-        }
+        "query": "from:theworldlabs -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "world-labs",
+      "tags": [
+        "官方账号"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-shapr3d",
+      "name": "X：Shapr3D (@shapr3d)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:shapr3d -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "shapr3d",
+      "tags": [
+        "官方账号"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "x-onshape",
+      "name": "X：Onshape (@Onshape)",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Onshape -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization"
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "onshape",
+      "tags": [
+        "官方账号"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "mp-qbitai",
+      "name": "公众号：量子位",
+      "kind": "mp_account",
+      "config": {
+        "wxid": "QbitAI",
+        "nickname": "量子位"
       },
       "tier": "T2",
-      "owner_entity_id": null,
-      "participation_mode": "editorial",
-      "interval_minutes": 180,
+      "owner_entity_id": "qbitai",
       "tags": [
-        "个人"
-      ],
+        "中文媒体"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "id": "mp-cadzxw",
+      "name": "公众号：CAD自学网",
+      "kind": "mp_account",
+      "config": {
+        "wxid": "cadzxw",
+        "nickname": "CAD自学网"
+      },
+      "tier": "T2",
+      "owner_entity_id": "cadzxw",
+      "tags": [
+        "中文媒体"
+      ]
     }
   ]
 }

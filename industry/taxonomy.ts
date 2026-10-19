@@ -12,12 +12,12 @@
  * feedLabel 是分类 RSS 标题里的名字（不写就用 label）。公开接口、RSS 和 MCP 里要把一类并进另一类发布，写在站点设置里（site/site.ts 的 PUBLIC_CATEGORIES）。
  */
 export const CATEGORIES = [
-  { key: "ai-models", tagColor: "indigo", label: "模型", feedLabel: "AI 模型", section: "模型发布/更新", guide: "模型本身的发布、版本、权重开放、能力或价格变化，以及既有榜单上的模型成绩。公布一次跑分不是发布新基准，也不是教程。" },
-  { key: "ai-products", tagColor: "turquoise", label: "产品", feedLabel: "AI 产品", section: "产品发布/更新", guide: "可使用的 AI 产品、功能、应用、工具、API、平台和工程组件的发布更新。模型厂商发布的推理框架、算子库、硬件适配组件仍是产品，不能因为厂商名归成模型。" },
-  { key: "industry", tagColor: "orange", label: "行业", feedLabel: "行业动态", section: "行业动态", guide: "已发生的公司经营、融资并购、人事、合作、诉讼、政策、真实安全事故及调查进展。新闻由当事人发帖、带有态度，也不因此变成观点。" },
-  { key: "paper", tagColor: "violet", label: "论文", feedLabel: "论文", section: "论文研究", guide: "以新研究方法、实验设计与发现为核心的论文、技术报告、新基准或研究数据集。系统性红队实验属于研究；既有榜单成绩归模型，真实事故的新闻调查归行业。" },
-  { key: "tip", tagColor: "green", label: "教程", section: "技巧与观点", guide: "读者可以照着使用的方法、提示词、工具用法、工程实践复盘与技术讲解。重点是可复用的做法；单纯发布工具归产品，只有态度和预测而无做法归观点。", commentary: true },
-  { key: "opinion", tagColor: "purple", label: "观点", section: "技巧与观点", guide: "重点是作者的解释、判断、主张、预测、评论或访谈观点。讨论市场不自动归行业，作者是名人不自动归观点。", commentary: true },
+  { key: "ai-models", tagColor: "indigo", label: "模型", feedLabel: "三维 AI 模型", section: "三维模型发布/更新", guide: "三维生成、CAD 生成、几何理解、重建与空间智能模型的发布、权重开放、版本和能力变化。仅对通用大模型的建模能力有具体证据时收录；可使用的软件、插件和服务归产品。" },
+  { key: "ai-products", tagColor: "turquoise", label: "产品", feedLabel: "产品", section: "建模产品与工具链", guide: "CAD、CAE、CAM、BIM、DCC 软件及三维生成平台、插件、Agent、API 和开源工具的重要发布更新。几何内核、数据交换和工程工具有明确建模价值时可收录。" },
+  { key: "industry", tagColor: "orange", label: "行业", feedLabel: "行业", section: "行业与生态", guide: "建模、工业软件和三维内容领域的融资并购、合作、经营、授权政策和行业变化。缺少实质变化的宣传和活动不是重要进展。" },
+  { key: "paper", tagColor: "violet", label: "论文", feedLabel: "论文", section: "论文与研究", guide: "CAD 表示、几何算法、参数化生成、三维生成、重建、空间理解及 AI 仿真的论文、技术报告、数据集和新基准。研究发布不等于产品上线。" },
+  { key: "tip", tagColor: "green", label: "实践", feedLabel: "实践", section: "实践与测评", guide: "有具体任务、步骤或结果的建模教程、复现、独立测评和生产管线实践。讲解已有工具的使用归实践；首次发布该工具归产品。", commentary: true },
+  { key: "opinion", tagColor: "purple", label: "观点", feedLabel: "观点", section: "观点与分析", guide: "有事实依据的技术路线、软件形态与产业分析。重点是作者的判断；实际产品发布、研究结果和企业动作归对应类别。", commentary: true },
 ] as const satisfies ReadonlyArray<{ key: string; tagColor: string; label: string; feedLabel?: string; section: string; guide: string; commentary?: true }>;
 
 /**
@@ -25,10 +25,10 @@ export const CATEGORIES = [
  * category 是类别，tag 是标签，两者都对上才算；unit 接在数字后面。
  * 没有这样一类的行业设成 null，报头就不显示这个数。
  */
-export const RELEASE: { category: string; tag: string; unit: string } | null = { category: "ai-models", tag: "模型发布", unit: "个新模型" };
+export const RELEASE: { category: string; tag: string; unit: string } | null = { category: "ai-models", tag: "模型发布", unit: "个模型发布" };
 
 /** 周报月报的总述可以直接写、不必在报道里找到出处的行业通用词（小写）。站名会自动算进去。 */
-export const PLAIN_TERMS: readonly string[] = ["ai", "api", "llm", "gpu", "agi", "ceo", "ipo"];
+export const PLAIN_TERMS: readonly string[] = ["ai", "api", "llm", "gpu", "cad", "cae", "cam", "bim", "dcc", "3d", "mesh", "b-rep", "nurbs", "3dgs", "nerf", "usd", "mcp"];
 
 /**
  * 内容理解一步给每篇资料判的“内容类型”（写在 prompts/content-understanding.md 里，改了类型要同步改那份提示词）。
@@ -47,20 +47,35 @@ export const CATEGORY_TAGS = [
 /** 可选的主题标签。 */
 export const TOPIC_TAGS = [
   "Agent", "编码", "推理", "多模态", "语音", "视频", "图像生成", "RAG", "端侧", "数据/训练", "搜索", "部署/工程", "开源生态", "具身智能", "MCP/工具调用",
+  "CAD", "CAE", "CAM", "BIM", "DCC", "生成式3D", "三维重建", "空间智能", "Text-to-CAD", "参数化建模", "几何内核", "B-Rep", "NURBS", "网格/拓扑", "3DGS", "NeRF", "Scan-to-CAD", "点云", "纹理/材质", "绑定/动画", "仿真/优化", "制造/3D打印", "数字孪生", "Blender", "Rhino/Grasshopper", "USD/互操作",
 ] as const;
 
 /** 可选的实体标签（公司、机构、平台）。 */
-export const ENTITY_TAGS = ["OpenAI", "Anthropic", "DeepSeek", "DeepMind", "Google", "Meta", "Microsoft", "xAI", "Hugging Face", "GitHub", "arXiv"] as const;
+export const ENTITY_TAGS = ["OpenAI", "Anthropic", "DeepSeek", "DeepMind", "Google", "Meta", "Microsoft", "xAI", "Hugging Face", "GitHub", "arXiv", "Meshy", "Tripo", "Hyper3D", "Zoo", "Backflip", "Adam", "Autodesk", "McNeel", "Blender", "SimScale", "Sloyd", "Shapr3D", "Onshape", "Siemens", "Dassault Systèmes", "腾讯混元", "World Labs"] as const;
 
 /** 模型常写的近义词，统一成词表里的写法。 */
 export const TAG_SYNONYMS: Readonly<Record<string, string>> = {
+  "AI CAD": "CAD",
+  "Text to CAD": "Text-to-CAD",
+  "text-to-cad": "Text-to-CAD",
+  "text-to-3d": "生成式3D",
+  "image-to-3d": "生成式3D",
+  "生成式 3D": "生成式3D",
+  "3D Gaussian Splatting": "3DGS",
+  "Gaussian Splatting": "3DGS",
+  "扫描转CAD": "Scan-to-CAD",
+  "CAD内核": "几何内核",
+  "Rhino": "Rhino/Grasshopper",
+  "Grasshopper": "Rhino/Grasshopper",
+  "四边面": "网格/拓扑",
+  "测评": "评测/基准",
   "教程/玩法": "教程/实践", "技巧/最佳实践": "教程/实践", "合作/生态": "行业动态", "融资/收购": "行业动态", "公司动态": "行业动态",
   合作: "行业动态", 生态: "行业动态", 融资: "行业动态", 收购: "行业动态", 投资: "行业动态", 并购: "行业动态",
   政策: "政策/监管", 监管: "政策/监管", 法规: "政策/监管", 安全: "安全/对齐", 对齐: "安全/对齐",
   论文: "论文/研究", 研究: "论文/研究", paper: "论文/研究", papers: "论文/研究",
   "open-source": "开源/仓库", 开源: "开源/仓库", 仓库: "开源/仓库", repo: "开源/仓库",
   教程: "教程/实践", 玩法: "教程/实践", 指南: "教程/实践", 技巧: "教程/实践", 最佳实践: "教程/实践", 实践: "教程/实践",
-  产品: "产品更新", 更新: "产品更新", 发布: "模型发布", 模型: "模型发布", 趋势: "现象/趋势", 现象: "现象/趋势", 观点: "大佬观点",
+  产品: "产品更新", 更新: "产品更新", 趋势: "现象/趋势", 现象: "现象/趋势", 观点: "大佬观点",
   视频生成: "视频", 非ai: "非AI/通用工具", "non-ai": "非AI/通用工具", 通用工具: "非AI/通用工具", 工程工具: "非AI/通用工具",
   安全扫描: "非AI/通用工具", devops: "非AI/通用工具", 行业: "行业动态", 动态: "行业动态",
 };
@@ -74,7 +89,26 @@ export const TAG_SYNONYMS: Readonly<Record<string, string>> = {
  * 所有这些名字都用来认出说的是哪家公司，比如把事实的主体对到发布方。
  */
 export const ENTITIES: Record<string, { name: string; displayTag: string | null; aliases: string[]; orgNames?: string[]; otherNames?: string[] }> = {
-  "world-labs": { name: "World Labs", displayTag: null, aliases: ["World Labs"] },
+  "meshy": {"name":"Meshy","displayTag":"Meshy","aliases":["Meshy","Meshy AI"],"orgNames":["Meshy"]},
+  "tripo": {"name":"Tripo / VAST","displayTag":"Tripo","aliases":["Tripo","Tripo AI","Tripo3D"],"orgNames":["Tripo","VAST"],"otherNames":["tripoai"]},
+  "hyper3d": {"name":"Hyper3D / Deemos","displayTag":"Hyper3D","aliases":["Hyper3D","Deemos","Rodin"],"orgNames":["Hyper3D","Deemos"],"otherNames":["DeemosTech"]},
+  "zoo": {"name":"Zoo","displayTag":"Zoo","aliases":["Zoo Design Studio","Zoo.dev","KittyCAD","Zookeeper"],"orgNames":["Zoo","KittyCAD"],"otherNames":["zoodotdev"]},
+  "backflip": {"name":"Backflip","displayTag":"Backflip","aliases":["Backflip","Backflip AI"],"orgNames":["Backflip"]},
+  "adam": {"name":"Adam","displayTag":"Adam","aliases":["Adam CAD","AdamCAD","adam.new"],"orgNames":["Adam"],"otherNames":["adamdotnew"]},
+  "autodesk": {"name":"Autodesk","displayTag":"Autodesk","aliases":["Autodesk","欧特克","Autodesk Fusion","Autodesk Forma","Revit"],"orgNames":["Autodesk","Autodesk Research","Autodesk AI Lab"]},
+  "mcneel": {"name":"McNeel / Rhino","displayTag":"McNeel","aliases":["McNeel","Rhinoceros","Rhino","Grasshopper"],"orgNames":["McNeel","Robert McNeel & Associates"]},
+  "blender": {"name":"Blender Foundation","displayTag":"Blender","aliases":["Blender Foundation","Blender Institute","Blender"],"orgNames":["Blender Foundation","Blender Institute"]},
+  "simscale": {"name":"SimScale","displayTag":"SimScale","aliases":["SimScale"],"orgNames":["SimScale"]},
+  "sloyd": {"name":"Sloyd","displayTag":"Sloyd","aliases":["Sloyd"],"orgNames":["Sloyd"]},
+  "shapr3d": {"name":"Shapr3D","displayTag":"Shapr3D","aliases":["Shapr3D"],"orgNames":["Shapr3D"]},
+  "onshape": {"name":"Onshape / PTC","displayTag":"Onshape","aliases":["Onshape","PTC"],"orgNames":["Onshape","PTC"]},
+  "siemens": {"name":"Siemens","displayTag":"Siemens","aliases":["Siemens","西门子","Siemens NX","Simcenter","Solid Edge"],"orgNames":["Siemens","Siemens Digital Industries Software"]},
+  "dassault": {"name":"Dassault Systèmes","displayTag":"Dassault Systèmes","aliases":["Dassault Systèmes","Dassault Systemes","达索系统","SOLIDWORKS","CATIA","SIMULIA"],"orgNames":["Dassault Systèmes"]},
+  "tencent": {"name":"腾讯混元3D","displayTag":"腾讯混元","aliases":["腾讯混元","混元3D","Hunyuan3D","HunyuanWorld","Tencent Hunyuan"],"orgNames":["腾讯","Tencent","Tencent Hunyuan"],"otherNames":["TencentHunyuan"]},
+  "world-labs": {"name":"World Labs","displayTag":"World Labs","aliases":["World Labs"],"orgNames":["World Labs"],"otherNames":["theworldlabs"]},
+  "arxiv": {"name":"arXiv","displayTag":"arXiv","aliases":["arXiv"],"orgNames":["arXiv"]},
+  "qbitai": {"name":"量子位","displayTag":null,"aliases":["量子位","QbitAI"]},
+  "cadzxw": {"name":"CAD自学网","displayTag":null,"aliases":["CAD自学网","cadzxw"]},
   "thinking-machines": { name: "Thinking Machines Lab", displayTag: null, aliases: ["Thinking Machines"] },
   amd: { name: "AMD", displayTag: null, aliases: ["AMD", "Advanced Micro Devices"] },
   openai: { name: "OpenAI", displayTag: "OpenAI", aliases: ["OpenAI", "ChatGPT", "Sora", "Codex", "GPT"], orgNames: ["OpenAI"], otherNames: ["OpenAI Developers"] },
@@ -99,6 +133,23 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
  * 行业没有这个问题时可以留空数组。
  */
 export const IDENTITY_LEXICON: ReadonlyArray<{ id: string; name: string; patterns: RegExp[] }> = [
+  { id: "meshy", name: "Meshy", patterns: [/meshy/i] },
+  { id: "tripo", name: "Tripo", patterns: [/\btripo(?:3d)?\b|\bvast\b/i] },
+  { id: "hyper3d", name: "Hyper3D", patterns: [/hyper3d|deemos|\brodin\b/i] },
+  { id: "zoo", name: "Zoo", patterns: [/zoo\.dev|zoodotdev|kittycad|zookeeper|zoo design studio/i] },
+  { id: "backflip", name: "Backflip", patterns: [/backflip/i] },
+  { id: "adam", name: "Adam", patterns: [/adam\.new|adamdotnew|adamcad/i] },
+  { id: "autodesk", name: "Autodesk", patterns: [/autodesk|欧特克|\brevit\b/i] },
+  { id: "mcneel", name: "McNeel / Rhino", patterns: [/mcneel|rhinoceros|\brhino\b|grasshopper/i] },
+  { id: "blender", name: "Blender", patterns: [/\bblender\b/i] },
+  { id: "simscale", name: "SimScale", patterns: [/simscale/i] },
+  { id: "sloyd", name: "Sloyd", patterns: [/sloyd/i] },
+  { id: "shapr3d", name: "Shapr3D", patterns: [/shapr3d/i] },
+  { id: "onshape", name: "Onshape", patterns: [/onshape|\bptc\b/i] },
+  { id: "siemens", name: "Siemens", patterns: [/siemens|西门子|simcenter|solid edge/i] },
+  { id: "dassault", name: "Dassault Systèmes", patterns: [/dassault|达索|solidworks|\bcatia\b|simulia/i] },
+  { id: "tencent", name: "腾讯混元3D", patterns: [/腾讯|tencent|混元|hunyuan/i] },
+  { id: "world-labs", name: "World Labs", patterns: [/world labs|theworldlabs/i] },
   { id: "openai", name: "OpenAI", patterns: [/openai|chatgpt|\bgpt-?[o\d]|\bsora\b|\bcodex\b/i] },
   { id: "anthropic", name: "Anthropic", patterns: [/anthropic|\bclaude\b/i, /\b(?:opus|sonnet|haiku)\s*\d+(?:[.\-]\d+)*\b/i, /\bfable\s*\d+(?:[.\-]\d+)*\b|\bmythos\b/i] },
   { id: "google", name: "Google / Gemini", patterns: [/google|deepmind|\bgemini\b|notebooklm|\bveo\s?\d|\bAlphaFold\b|\bAMIE\b/i] },
@@ -135,6 +186,25 @@ export const IDENTITY_LEXICON: ReadonlyArray<{ id: string; name: string; pattern
 
 /** 这些域名上的文章，发布方就是对应的公司（托管平台如 GitHub、arXiv 不算）。 */
 export const PUBLISHER_DOMAINS: ReadonlyArray<{ entityId: string; domains: readonly string[] }> = [
+  {"entityId":"meshy","domains":["meshy.ai"]},
+  {"entityId":"tripo","domains":["tripo3d.ai"]},
+  {"entityId":"hyper3d","domains":["hyper3d.ai","deemos.com","deemos.dev"]},
+  {"entityId":"zoo","domains":["zoo.dev"]},
+  {"entityId":"backflip","domains":["backflip.ai"]},
+  {"entityId":"adam","domains":["adam.new"]},
+  {"entityId":"autodesk","domains":["autodesk.com"]},
+  {"entityId":"mcneel","domains":["rhino3d.com","mcneel.com"]},
+  {"entityId":"blender","domains":["blender.org"]},
+  {"entityId":"simscale","domains":["simscale.com"]},
+  {"entityId":"sloyd","domains":["sloyd.ai"]},
+  {"entityId":"shapr3d","domains":["shapr3d.com"]},
+  {"entityId":"onshape","domains":["onshape.com","ptc.com"]},
+  {"entityId":"siemens","domains":["siemens.com"]},
+  {"entityId":"dassault","domains":["3ds.com","solidworks.com"]},
+  {"entityId":"tencent","domains":["hunyuan.tencent.com"]},
+  {"entityId":"world-labs","domains":["worldlabs.ai"]},
+  {"entityId":"qbitai","domains":["qbitai.com"]},
+  {"entityId":"cadzxw","domains":["cadzxw.com"]},
   { entityId: "openai", domains: ["openai.com"] },
   { entityId: "anthropic", domains: ["anthropic.com", "claude.com"] },
   { entityId: "google", domains: ["deepmind.google", "ai.google", "blog.google"] },

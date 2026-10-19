@@ -20,6 +20,7 @@ import { FetchError, type Candidate, type SourceRow } from "../sources/types.ts"
 import { fetchWebList } from "../sources/web-list.ts";
 import { fetchXSearch } from "../sources/x.ts";
 import { xHandle } from "../sources/account.ts";
+import { collectionSettings } from "../sources/settings.ts";
 
 
 export interface SourceListFilters {
@@ -220,7 +221,7 @@ const CreateSchema = z
     config: z.record(z.string(), z.unknown()),
     tier: z.enum(["T1", "T1_5", "T2", "EXCLUDE_MP"]).default("T2"),
     participation_mode: z.enum(["editorial", "hot_signal", "isolated"]).default("editorial"),
-    interval_minutes: z.number().int().min(1).max(1440).default(30),
+    interval_minutes: z.number().int().min(1).max(1440).optional(),
     first_party: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
     site_fulltext: z.boolean().default(SOURCE_DEFAULTS.siteFulltext),
@@ -257,6 +258,7 @@ export async function createSource(input: unknown, actor: string): Promise<Befor
   assertSupportedConfig(s.kind, s.config);
   return sql.begin(async (tx) => {
     await tx`SELECT pg_advisory_xact_lock(hashtext('admin-source-identity'))`;
+    s.interval_minutes ??= (await collectionSettings(tx)).intervalMinutes;
     const dup = await findDuplicateSource(s.kind, s.config, undefined, tx);
     if (dup) return { created: false as const, duplicate: dup };
     const [row] = await tx<BeforeJson<AdminSource>[]>`
