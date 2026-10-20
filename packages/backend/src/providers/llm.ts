@@ -1,4 +1,4 @@
-// OpenAI-compatible chat calls, always through receipts. One model is enough: `default` is whatever the
+// Model calls (OpenAI-compatible HTTP or an SDK preset), always through receipts. `default` is whatever the
 // deployment names in LLM_BASE_URL / LLM_API_KEY / LLM_MODEL, and every capability uses it unless the
 // site, an environment variable or the admin's model page picks one of the site's named presets
 // (site/models.ts).
@@ -12,10 +12,9 @@ import {
   type ReceiptRequest,
 } from "./receipts.ts";
 import { enterModelCircuit, recordModelHealth, type CircuitPermit } from "./circuit.ts";
+import { cursorCompletion } from "./cursor.ts";
 
-export interface ModelSpec extends ModelPreset {
-  key: string;
-}
+export type ModelSpec = ModelPreset & { key: string };
 
 function extraFromEnv(value: string | undefined): Record<string, unknown> | undefined {
   if (!value) return undefined;
@@ -125,6 +124,10 @@ function requestFor<S extends z.ZodType>(opts: ChatJsonOptions<S>, spec: ModelSp
     requestSummary: { promptVersion: opts.promptVersion, systemHash: sha256(opts.system), userHash: sha256(userText), userChars: userText.length, temperature, maxTokens },
     attemptTag: opts.attemptTag,
   };
+  if (spec.transport === "cursor-sdk") {
+    request.identity = { ...request.identity as Record<string, unknown>, transport: "cursor-sdk", adapterVersion: 1, json: spec.jsonMode && opts.json !== false };
+    request.requestSummary = { ...request.requestSummary, transport: "cursor-sdk" };
+  }
   return { request, temperature, maxTokens, userText };
 }
 
@@ -164,9 +167,12 @@ async function chatOnce<S extends z.ZodType>(opts: ChatJsonOptions<S>, circuit =
   const spec = MODELS[opts.model];
   if (!spec) throw new Error(`Unknown model ${opts.model}`);
   if (!config.modelCallsEnabled) throw new ModelUnavailableError("Model calls are disabled (MODEL_CALLS_ENABLED=false)");
-  const baseUrl = credential("models", spec.baseUrlEnv);
+  const baseUrl = spec.transport === "cursor-sdk" ? null : credential("models", spec.baseUrlEnv);
   const apiKey = credential("models", spec.apiKeyEnv);
-  if (!baseUrl || !apiKey || !spec.model) throw new ModelUnavailableError(`Model ${opts.model} is not configured (${spec.baseUrlEnv}, ${spec.apiKeyEnv}${spec.key === "default" ? ", LLM_MODEL" : ""})`);
+  if ((!baseUrl && spec.transport !== "cursor-sdk") || !apiKey || !spec.model) throw new ModelUnavailableError(`Model ${opts.model} is not configured (${[spec.baseUrlEnv, spec.apiKeyEnv, spec.key === "default" ? "LLM_MODEL" : null].filter(Boolean).join(", ")})`);
+  if (spec.transport === "cursor-sdk" && Array.isArray(opts.user) && opts.user.some(part => part.type !== "text")) {
+    throw new ModelUnavailableError("The Cursor SDK adapter supports text input only");
+  }
 
   const { request, temperature, maxTokens, userText } = requestFor(opts, spec);
   const timeoutMs = opts.timeoutMs ?? (circuit ? FAILOVER_TIMEOUT_MS : TIMEOUT_MS);
@@ -189,10 +195,22 @@ async function chatOnce<S extends z.ZodType>(opts: ChatJsonOptions<S>, circuit =
     { ...request, fallbackFor },
     async () => {
       const started = performance.now();
+      if (spec.transport === "cursor-sdk") {
+        try {
+          const outcome = await cursorCompletion({ apiKey, model: spec.model, system: opts.system,
+            user: typeof opts.user === "string" ? opts.user : opts.user.map(part => part.type === "text" ? part.text : "").join("\n"),
+            json: spec.jsonMode && opts.json !== false, maxTokens, timeoutMs });
+          if (circuit) await recordModelHealth(spec.service, permit!, false);
+          return outcome;
+        } catch (error) {
+          if (circuit) await recordModelHealth(spec.service, permit!, failureKind(error) !== "refused");
+          throw error;
+        }
+      }
       let res: Response;
       let text: string;
       try {
-        res = await fetch(`${baseUrl.replace(/\/$/, "")}/chat/completions`, {
+        res = await fetch(`${baseUrl!.replace(/\/$/, "")}/chat/completions`, {
           method: "POST",
           headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
           body: JSON.stringify(body),

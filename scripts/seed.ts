@@ -6,6 +6,7 @@ import path from "node:path";
 import { REPO_ROOT } from "@aihot/backend/config";
 import { closeDb, sql } from "@aihot/backend/db";
 import { assertSupportedConfig } from "@aihot/backend/sources/config-keys";
+import { SERVICE_DEFAULTS } from "@aihot/site/models";
 
 interface SeedSource {
   id: string;
@@ -37,4 +38,11 @@ for (const s of sources) {
   added += inserted.length;
 }
 console.log(`sources: ${added} added, ${sources.length - added} already there`);
+for (const [service, defaults] of Object.entries(SERVICE_DEFAULTS)) {
+  const b = defaults.budget;
+  await sql`INSERT INTO budgets (service,per_minute,per_hour,per_day,note)
+    VALUES (${service},${b.perMinute},${b.perHour},${b.perDay},${b.note}) ON CONFLICT (service) DO NOTHING`;
+  for (const p of defaults.prices) await sql`INSERT INTO service_prices (service,model,currency,input_per_mtok,cached_per_mtok,output_per_mtok)
+    VALUES (${service},${p.model},${p.currency},${p.input},${p.cached},${p.output}) ON CONFLICT (service,model) DO NOTHING`;
+}
 await closeDb();

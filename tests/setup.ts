@@ -41,6 +41,7 @@ export function pointModels(url: string, models = ["qwen3.7-flash", "glm-5.3-fla
   for (const name of models) {
     const preset = PRESETS[name];
     if (!preset) throw new Error(`the site has no model preset ${name}`);
+    if (preset.transport === "cursor-sdk") throw new Error("Stub the Cursor SDK runtime instead of pointing it at a chat-completions server");
     env[preset.baseUrlEnv] = `${url}/v1`;
     env[preset.apiKeyEnv] = "test-key";
   }

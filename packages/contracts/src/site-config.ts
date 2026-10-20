@@ -1,8 +1,7 @@
 // Configuration fields the engine reads from each edition's own site package.
-export interface ModelPreset {
+interface ModelPresetOptions {
   service: string;
   model: string;
-  baseUrlEnv: string;
   apiKeyEnv: string;
   /** Extra request fields, e.g. switching reasoning off for short structured tasks. */
   extra?: Record<string, unknown>;
@@ -15,6 +14,12 @@ export interface ModelPreset {
   /** The score step's call parameters with this model, instead of the step's own (editorial/analyze.ts). */
   scoreCall?: { temperature: number; maxTokens: number; timeoutMs: number };
 }
+
+/** SDK models have no OpenAI-compatible HTTP address. */
+export type ModelPreset = ModelPresetOptions & (
+  | { transport?: "openai"; baseUrlEnv: string }
+  | { transport: "cursor-sdk"; baseUrlEnv?: never; extra?: never; reasoningTokens?: never }
+);
 
 /** The optional founder shown in the site's structured metadata. */
 export interface Founder {

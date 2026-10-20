@@ -1,5 +1,5 @@
 {
-  "$comment": "AI3DHOT 行业信源。2026-10-19 核查：免费源默认启用，小规模历史导入；X 与公众号待服务凭据和实际试抓后手动启用。详见 docs/ai3d-sources.md。种子只新增，不覆盖数据库已有设置。",
+  "$comment": "AI3DHOT 行业信源。2026-10-20：已确认新增 8 个 X，全部按每日一次及三维相关查询配置。首次最多 3 条/3 个月，全文权限关闭。种子只新增，不覆盖已有设置。详见 docs/ai3d-sources.md。",
   "sources": [
     {
       "participation_mode": "editorial",
@@ -365,29 +365,6 @@
       },
       "tier": "T2",
       "owner_entity_id": "qbitai",
-      "tags": [
-        "行业媒体"
-      ]
-    },
-    {
-      "participation_mode": "editorial",
-      "interval_minutes": 1440,
-      "site_fulltext": false,
-      "syndicate_fulltext": false,
-      "enabled": true,
-      "id": "rss-cadzxw",
-      "name": "CAD自学网",
-      "kind": "rss",
-      "config": {
-        "feedUrl": "https://www.cadzxw.com/feed",
-        "_aihot": {
-          "initialBackfillLimit": 3,
-          "initialBackfillMonths": 3
-        },
-        "sortByPublishedAt": true
-      },
-      "tier": "T2",
-      "owner_entity_id": "cadzxw",
       "tags": [
         "行业媒体"
       ]
@@ -846,18 +823,593 @@
       "interval_minutes": 1440,
       "site_fulltext": false,
       "syndicate_fulltext": false,
-      "enabled": false,
-      "id": "mp-cadzxw",
-      "name": "公众号：CAD自学网",
-      "kind": "mp_account",
+      "enabled": true,
+      "id": "rss-comfy",
+      "name": "ComfyUI Official Blog",
+      "kind": "rss",
       "config": {
-        "wxid": "cadzxw",
-        "nickname": "CAD自学网"
+        "feedUrl": "https://blog.comfy.org/feed",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "comfy",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-hitem-stories",
+      "name": "Hi3D / Hitem3D · 用户故事",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.hitem3d.ai/zh/blog/stories",
+        "parseMode": "html",
+        "itemSelector": "a.strapi-blog__card",
+        "titleSelector": "h3",
+        "publishedAtSelector": "time",
+        "allowUrlPrefixes": [
+          "https://www.hitem3d.ai/zh/blog/"
+        ],
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "zh-CN,zh;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "hitem3d",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-radiance-fields",
+      "name": "Radiance Fields",
+      "kind": "web_list",
+      "config": {
+        "url": "https://radiancefields.com/",
+        "parseMode": "html",
+        "itemSelector": "a.framer-17sxqoc:has([data-framer-name=\"JAN 20, 2024\"])",
+        "titleSelector": "h2,h3",
+        "publishedAtSelector": "[data-framer-name=\"JAN 20, 2024\"]",
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
       },
       "tier": "T2",
-      "owner_entity_id": "cadzxw",
+      "owner_entity_id": "radiance-fields",
       "tags": [
-        "中文媒体"
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "json-text-to-cad",
+      "name": "Text to CAD · Releases",
+      "kind": "json_list",
+      "config": {
+        "url": "https://api.github.com/repos/earthtojake/text-to-cad/releases?per_page=10",
+        "mode": "json_api",
+        "titlePaths": [
+          "name",
+          "tag_name"
+        ],
+        "summaryPaths": [
+          "body"
+        ],
+        "summaryIsBody": true,
+        "authorPaths": [
+          "author.login"
+        ],
+        "publishedAtPath": "published_at",
+        "urlTemplate": "{raw:html_url}",
+        "requireBoolean": {
+          "path": "draft",
+          "equals": false
+        },
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "earthtojake",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-classcad",
+      "name": "ClassCAD / Buerli Journal",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://awv-informatik.ch/blog/rss.xml",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "classcad",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-leo-ai",
+      "name": "Leo AI · Engineering Blog",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.getleo.ai/blog",
+        "baseUrl": "https://www.getleo.ai/",
+        "parseMode": "html",
+        "itemSelector": "a[data-framer-name=\"post\"]",
+        "titleSelector": "h2,h3",
+        "allowUrlPrefixes": [
+          "https://www.getleo.ai/blog/"
+        ],
+        "detail": {
+          "maxFetches": 3,
+          "publishedAtSelector": "time[datetime]",
+          "publishedAtAuthoritative": true,
+          "publishedAtUtcOffset": "+00:00"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "leo-ai",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "json-blender-lab-mcp",
+      "name": "Blender Lab MCP · Releases",
+      "kind": "json_list",
+      "config": {
+        "url": "https://projects.blender.org/api/v1/repos/lab/blender_mcp/releases?limit=10",
+        "mode": "json_api",
+        "titlePaths": [
+          "name",
+          "tag_name"
+        ],
+        "summaryPaths": [
+          "body"
+        ],
+        "summaryIsBody": true,
+        "authorPaths": [
+          "author.login"
+        ],
+        "publishedAtPath": "published_at",
+        "urlTemplate": "{raw:html_url}",
+        "requireBoolean": {
+          "path": "draft",
+          "equals": false
+        },
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "blender",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-sidahuj",
+      "name": "X：Siddharth Ahuja · MCP for Blender",
+      "kind": "x_search",
+      "config": {
+        "query": "from:sidahuj -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "sidahuj",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-meta-ai",
+      "name": "Meta AI · Research Blog",
+      "kind": "web_list",
+      "config": {
+        "url": "https://ai.meta.com/blog/",
+        "parseMode": "html",
+        "itemSelector": "div._amdc:has(a._amdf)",
+        "linkSelector": "a._amdf",
+        "titleSelector": "a._amdf",
+        "publishedAtSelector": "div._amdj:last-child",
+        "publishedAtUtcOffset": "+00:00",
+        "allowUrlPrefixes": [
+          "https://ai.meta.com/blog/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "meta",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-stability",
+      "name": "Stability AI · News & Research",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://stability.ai/news-updates?format=rss",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T1",
+      "owner_entity_id": "stability-ai",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-cgchannel",
+      "name": "CG Channel",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.cgchannel.com/",
+        "parseMode": "html",
+        "itemSelector": "article.boxout:has(.boxout-date)",
+        "linkSelector": "a.boxout-headline",
+        "titleSelector": "a.boxout-headline",
+        "publishedAtSelector": ".boxout-date",
+        "publishedAtUtcOffset": "+00:00",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": "cgchannel",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-cgpress",
+      "name": "CGPress",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://cgpress.org/feed",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": "cgpress",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-tencent-hunyuan",
+      "name": "X：腾讯混元 · 3D",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TencentHunyuan (3D OR Hunyuan3D OR HunyuanWorld OR 三维 OR 建模) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "tencent",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-games",
+      "name": "GAMES · 图形学研讨会",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://games-cn.org/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true
+      },
+      "tier": "T2",
+      "owner_entity_id": "games",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-nerfstudio",
+      "name": "X：Nerfstudio",
+      "kind": "x_search",
+      "config": {
+        "query": "from:nerfstudioteam (NeRF OR nerfstudio OR gsplat OR Gaussian OR splat OR reconstruction OR 3D) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "nerfstudio",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-kijai",
+      "name": "X：Kijai · ComfyUI 三维工作流",
+      "kind": "x_search",
+      "config": {
+        "query": "from:kijaidesign (Hunyuan3D OR TRELLIS OR 3D OR mesh OR Gaussian OR NeRF OR PBR) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "kijai",
+      "tags": [
+        "实践/开发者"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-lichtfeld",
+      "name": "X：Janusch · LichtFeld Studio",
+      "kind": "x_search",
+      "config": {
+        "query": "from:janusch_patas (LichtFeld OR Gaussian OR splat OR NeRF OR 3D OR reconstruction) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "lichtfeld",
+      "tags": [
+        "实践/开发者"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-earthtojake",
+      "name": "X：earthtojake · Text to CAD",
+      "kind": "x_search",
+      "config": {
+        "query": "from:earthtojake (CAD OR CADAgent OR MCP OR modeling OR modelling OR 3D OR geometry) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "earthtojake",
+      "tags": [
+        "实践/开发者"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-comfy",
+      "name": "X：ComfyUI · 三维工作流",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ComfyUI (3D OR Hunyuan3D OR TRELLIS OR Tripo OR Rodin OR mesh OR Gaussian OR NeRF OR PBR OR 建模) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "comfy",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-radiance-fields",
+      "name": "X：Radiance Fields",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RadianceFields (Gaussian OR splat OR NeRF OR radiance OR 3D OR reconstruction) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": "radiance-fields",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-buerli",
+      "name": "X：Buerli / ClassCAD · AI CAD",
+      "kind": "x_search",
+      "config": {
+        "query": "from:buerli_io (AI OR agent OR MCP OR LLM OR \"text-to-cad\" OR \"natural language\") -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "classcad",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-sidefx",
+      "name": "X：SideFX / Houdini · AI 与机器学习",
+      "kind": "x_search",
+      "config": {
+        "query": "from:sidefx (AI OR \"machine learning\" OR neural OR Gaussian OR \"Houdini ML\" OR ML) -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "sidefx",
+      "tags": [
+        "官方/研究"
       ]
     }
   ]

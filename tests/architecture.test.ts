@@ -156,9 +156,11 @@ test("every environment variable the code reads is listed in a template, and eve
     ...(DEPLOYMENT.includes(COMPOSE) ? assigned(COMPOSE, /^\s+([A-Z][A-Z0-9_]+):\s/gm) : []),
     ...tracked("*.service").flatMap((unit) => assigned(unit, /^Environment="?([A-Z][A-Z0-9_]+)=/gm)),
   ]);
-  const read = envReads(production());
+  // Site model presets are executable deployment configuration and can read credentials/model IDs.
+  const configuredCode = [...production(), ...sources("site")];
+  const read = envReads(configuredCode);
   const readAnywhere = new Set([...read, ...envReads(sources("scripts")),
-    ...[...production(), ...sources("scripts")].flatMap(({ text }) => matches(text, NAMED)),
+    ...[...configuredCode, ...sources("scripts")].flatMap(({ text }) => matches(text, NAMED)),
     ...DEPLOYMENT.flatMap((file) => matches(readFileSync(path.join(ROOT, file), "utf8"), SUBSTITUTED))]);
   assert.deepEqual([...read].filter((name) => !listed.has(name) && !preset.has(name)), [], "list it in an environment template, or stop reading it");
   assert.deepEqual([...listed].filter((name) => !readAnywhere.has(name)), [], "no code reads it: remove it from the template");

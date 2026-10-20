@@ -89,6 +89,21 @@ export const TAG_SYNONYMS: Readonly<Record<string, string>> = {
  * 所有这些名字都用来认出说的是哪家公司，比如把事实的主体对到发布方。
  */
 export const ENTITIES: Record<string, { name: string; displayTag: string | null; aliases: string[]; orgNames?: string[]; otherNames?: string[] }> = {
+  "nerfstudio": {"name":"Nerfstudio","displayTag":null,"aliases":["Nerfstudio","nerfstudioteam"],"orgNames":["Nerfstudio"]},
+  "kijai": {"name":"Jukka Seppänen / Kijai","displayTag":null,"aliases":["Jukka Seppänen","Kijai","kijaidesign"]},
+  "lichtfeld": {"name":"LichtFeld Studio","displayTag":null,"aliases":["LichtFeld Studio","LichtFeld","janusch_patas"],"orgNames":["LichtFeld Studio"]},
+  "sidefx": {"name":"SideFX / Houdini","displayTag":null,"aliases":["SideFX","Houdini"],"orgNames":["SideFX","Side Effects Software"]},
+  "comfy": {"name":"ComfyUI","displayTag":null,"aliases":["ComfyUI","Comfy Org"]},
+  "hitem3d": {"name":"Hi3D / Hitem3D","displayTag":null,"aliases":["Hi3D","Hitem3D"]},
+  "radiance-fields": {"name":"Radiance Fields","displayTag":null,"aliases":["Radiance Fields"]},
+  "earthtojake": {"name":"earthtojake","displayTag":null,"aliases":["earthtojake","CADAgent"]},
+  "classcad": {"name":"AWV / ClassCAD / Buerli","displayTag":null,"aliases":["AWV Informatik","ClassCAD","Buerli"]},
+  "leo-ai": {"name":"Leo AI","displayTag":null,"aliases":["Leo AI","GetLeo"]},
+  "sidahuj": {"name":"Siddharth Ahuja","displayTag":null,"aliases":["Siddharth Ahuja","sidahuj","ahujasid"]},
+  "stability-ai": {"name":"Stability AI","displayTag":null,"aliases":["Stability AI"]},
+  "cgchannel": {"name":"CG Channel","displayTag":null,"aliases":["CG Channel"]},
+  "cgpress": {"name":"CGPress","displayTag":null,"aliases":["CGPress"]},
+  "games": {"name":"GAMES 图形学研讨会","displayTag":null,"aliases":["GAMES 图形学研讨会","GAMES Webinar"]},
   "meshy": {"name":"Meshy","displayTag":"Meshy","aliases":["Meshy","Meshy AI"],"orgNames":["Meshy"]},
   "tripo": {"name":"Tripo / VAST","displayTag":"Tripo","aliases":["Tripo","Tripo AI","Tripo3D"],"orgNames":["Tripo","VAST"],"otherNames":["tripoai"]},
   "hyper3d": {"name":"Hyper3D / Deemos","displayTag":"Hyper3D","aliases":["Hyper3D","Deemos","Rodin"],"orgNames":["Hyper3D","Deemos"],"otherNames":["DeemosTech"]},
