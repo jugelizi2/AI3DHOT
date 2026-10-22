@@ -1,6 +1,6 @@
 # AI3DHOT 信源与行业配置
 
-核查日期：2026-10-20（Asia/Shanghai）。
+核查日期：2026-10-22（Asia/Shanghai）。分批接入记录按日期保留，最新一批见文末。
 
 ## 定位
 
@@ -85,7 +85,7 @@ AI3DHOT / AI 建模热点，面向建模师、设计工程师、产品经理、�
 | [Tripo Blog](https://www.tripo3d.ai/blog) | 本机直接请求失败；官方 X 已配置为停用。开发者更新日志同样需在部署网络复查。 |
 | [Meshy 更新日志](https://docs.meshy.ai/en/webapp/changelog) | 官方搜索结果可见，当前网络未完成有效正文与日期解析；不写猜测的时间规则。 |
 | [Tripo 开发者更新日志](https://developers.tripo3d.ai/en/docs/changelog) | 当前本机读取失败；保留后续入口。 |
-| [AEC Magazine](https://aecmag.com/feed/) | 本机请求超时。 |
+| [AEC Magazine](https://aecmag.com/feed/) | 初轮请求超时；2026-10-22 复查有效，已补充 RSS，限定 AI 分类。 |
 | [CG Channel](https://www.cgchannel.com/) | 本轮改用首页；其 RSS 停留在 2024 年，未启用该旧流。 |
 | [3D Printing Industry](https://3dprintingindustry.com/feed/) | 本机请求失败。 |
 | [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/blog/feed/) | HTTP 403，不绕过限制；可在部署网络复查。 |
@@ -173,3 +173,33 @@ AI3DHOT / AI 建模热点，面向建模师、设计工程师、产品经理、�
 本轮首抓（2026-10-20）：8 个任务全部成功，合计读取 121 条、首次入库 15 条。ComfyUI、earthtojake、LichtFeld、Radiance Fields、SideFX 各读取 20 条并入库 3 条；Nerfstudio 读取 20 条但本轮无新增，Kijai 读取 1 条但本轮无新增，Buerli 查询返回 0 条。0 新增不等于请求失败；首次导入遵循时间窗口、去重及采集边界。站点合计启用 47 个来源（37 免费入口 + 10 个 X），所有来源间隔均为 1440 分钟。
 
 Stability AI 的 @StabilityAI 已核实，但已有 RSS 且二维 / 音频内容较多，未列入优先补充。@YuanmingH、@ashawkey3 有相关内容线索，但本轮未从作者官网或 GitHub 直接核实对应 X 外链，暂不写入执行配置。
+
+## 2026-10-22：SKY-001 与工程 AI 补充
+
+站长确认全部补充本轮 9 个来源及 2 个跨账号 X 查询。原文章库未发现 SKY-001 / Skyfall；原 10 个 X 查询均限制 `from:` 账号，不能发现未配置的新团队。新增仍为每日一次（1440 分钟），首次最多 3 条，通常回看 3 个月；LEAP71 与 Neural Concept 更新较慢，首轮回看 12 个月。历史回灌继续按原规则显示，不冒充当天发布。
+
+| ID | 来源与入口 | 实现与边界 |
+|---|---|---|
+| `web-skyfall` | [Skyfall Blog](https://skyfall.ai/blog) | `skyfall_blog` 适配器跟随网页当前的 Vite 入口与博客 chunk，不固定版本 hash；只解析静态字符串，不执行远端脚本。读取原文标题、ISO 日期、摘要及内嵌 HTML。当前真实响应 8 篇，均有日期，含 10 月 19 日 SKY-001 发布。 |
+| `x-skyfall-sam` | [Sam Pasupalak / @spisallyouneed](https://x.com/spisallyouneed) | 创始人发布入口；只读该账号，机构归属为 Skyfall，个人发布者身份保留。 |
+| `x-skyfall` | [Skyfall / @skyfallai](https://x.com/skyfallai) | 官网脚本的公开社交链接确认团队账号；与博客、创始人共用 `skyfall` 机构归属，防止重复扩大热度。 |
+| `rss-aecmag` | [AEC Magazine RSS](https://aecmag.com/feed/) | 真实响应 200 篇有日期记录，采集阶段仅保留 `AI` 分类；之后继续行业预筛。 |
+| `web-formas` | [Formas Blog](https://www.formas.ai/blog) | 10 张有日期文章卡片，覆盖 Cartesian、可编辑 3D 与设计工作流；二维与活动内容由行业预筛判断。 |
+| `web-physicsx` | [PhysicsX Newsroom](https://www.physicsx.ai/newsroom) | 62 篇有日期文章；使用每张卡片同一文章的英文长日期，避免把英式日/月日期误读为月/日。 |
+| `rss-leap71` | [LEAP71 RSS](https://leap71.com/feed/) | 10 篇有日期记录，覆盖 Noyron、计算工程和制造验证。低频来源不声称每天都有新消息。 |
+| `web-neural-concept` | [Neural Concept Press Releases](https://www.neuralconcept.com/newsroom/press-releases) | 官方发布列表，避免把 Newsroom 中媒体报道全算作公司原文；列表仅给月份，详情页的 `time[datetime]` 提供发布日期，每轮最多补读 3 页。 |
+| `web-oda-mcp` | [Open Design Alliance / MCP](https://www.opendesign.com/blog/tag/mcp) | 6 篇有日期文章，聚焦 CAD/BIM 文件与 Agent；固定英文请求，避免默认中文协商返回不同布局、丢失日期。 |
+| `x-discover-engineering` | X：工程建模主题发现 | 跨账号搜索 CAD / BIM / text-to-CAD 与 AI / Agent / world model / foundation model 的交集，排除普通回复和转推。无固定机构归属，不把发现入口冒充原发布者。 |
+| `x-discover-3d` | X：三维建模主题发现 | 跨账号搜索 text-to-3D / image-to-3D / 3D generation / Hunyuan3D / 3D foundation model，以及同时包含 TRELLIS 与 3D 的帖子，结合 model / release / launch / paper。真实试抓发现普通作品、营销长文及同名 PHP 工具噪声，已收窄技术术语、排除促销与转推回复，并限定至少 5 个赞；低互动新帖仍可能漏掉，已知账号源不设此热度门槛。 |
+
+所有新增网页与 RSS 均固定 `Accept-Language: en-US,en;q=0.9`。所有入口继续关闭站内全文与全文 RSS 权限，仅公开摘要与原文链接；采集正文用于正常分析不代表获得转载许可。X 请求继续经过 SocialData 预算和回执，后续模型处理沿用现有路由、预算和入选标准。
+
+SKY-001 的演示、速度与费用比较属于厂商提供的信息，不能写成独立复现结论。模型当前能力与可执行 CAD 操作的后续计划应按官方技术文章区分；新增信源不自动提高可信度、评分或精选资格。
+
+本轮运行结果：11 个入口首抓全部成功，最初导入 31 条素材；三维发现查询经真实结果收窄后的几轮验证另导入 7 条，累计 38 条候选素材，仍需行业筛选。所有新增入口已启用，站点合计 58 个启用入口（44 个免费入口、14 个 X 查询），均为 1440 分钟。来源创建、查询修正、首次游标重置及启用均有操作审计；已有文章与原信源设置保留。
+
+SKY-001 官方文章正文与原始日期已入库。验证时 Cursor 日请求预算已耗尽，文章处于正常等待重试状态；没有放宽预算、重置回执、改精选门槛或强行发布。
+
+后续站长提高 Cursor 预算后，本批 38 条因日预算等待的素材已重新进入原处理队列，沿用原请求身份与付费回执。
+
+验证：类型检查、生产构建、945 项后端测试、59 项页面测试以及站点冒烟检查通过。Skyfall 原通用 HTML 规则无法读出文章，本轮适配后可从同一官方响应读出 8 篇有日期文章；新增适配器的本地替身测试覆盖版本 hash 变化、正文读取、远端脚本不执行、模板插值与外站脚本地址拒绝。

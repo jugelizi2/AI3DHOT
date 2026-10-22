@@ -10,6 +10,7 @@ import { sanitizeBody } from "../content/sanitize.ts";
 import { JINA_PREFIX, jinaRead } from "../providers/jina.ts";
 import { articleUtcOffset, readPublicationDate, type PublicationDate } from "./dates.ts";
 import { FetchError, type Candidate, type SourceRow } from "./types.ts";
+import { fromSkyfallBlog } from "./skyfall.ts";
 
 
 /** A date rule names one element; unrelated tooltips must not hide its visible publication date. */
@@ -329,9 +330,10 @@ async function fromMimoHome(html: string, base: string, source: SourceRow): Prom
 
 export async function fetchWebList(source: SourceRow): Promise<Candidate[]> {
   const { text, viaJina, base } = await fetchListingText(source);
-  const mode = source.config.adapter === "mimo_home" ? "mimo_home" : source.config.parseMode ?? (viaJina ? "markdown" : "html");
+  const mode = source.config.adapter ?? source.config.parseMode ?? (viaJina ? "markdown" : "html");
   let out: Candidate[];
   if (mode === "mimo_home") out = await fromMimoHome(text, base, source);
+  else if (mode === "skyfall_blog") out = await fromSkyfallBlog(text, base, source);
   else if (mode === "markdown") out = fromMarkdown(text, base, source);
   else if (mode === "docusaurus_changelog") out = fromDocusaurusChangelog(text, base, source);
   else if (mode === "intercom_changelog") out = fromIntercomChangelog(text, base, source);

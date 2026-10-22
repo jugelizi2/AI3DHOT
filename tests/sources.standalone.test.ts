@@ -282,3 +282,42 @@ test("a source's language is an Accept-Language value, refused by kinds that rea
   }
   for (const kind of ["x_search", "mp_account", "external"] as const) assert.deepEqual(unsupportedConfig(kind, { acceptLanguage: "en" }), ["acceptLanguage"], kind);
 });
+
+test("a script-rendered engineering blog yields dated posts and its embedded article, without executing scripts", async () => {
+  pages["/sky-blog"] = () => '<html><script type="module" src="/assets/index-v1.js"></script><a href="/">Menu</a></html>';
+  pages["/assets/index-v1.js"] = () => 'const Blog=()=>import(`./BlogPage-v1.js`);throw new Error("must not execute");';
+  pages["/assets/BlogPage-v1.js"] = () => [
+    'var p={slug:`new-model`,title:`A new engineering model`,author:`Research`,date:`Oct 19, 2026`,iso:`2026-10-19`,chips:[`CAD`,`BIM`],excerpt:`A design\\xA0plan, with \\`parts\\\``,toc:[{title:`Intro`}],html:``},',
+    'q={slug:`older-model`,title:`An older model`,author:`Research`,date:`Sep 30, 2026`,iso:`2026-09-30`,excerpt:`Older release`,html:`<p>Previous release.</p>`};',
+    'const embeds={"../../blog-embeds/new-model/article.html":()=>import(`./article-v1.js`)};',
+  ].join('');
+  pages["/assets/article-v1.js"] = () => 'var e=`<article><h2>Construction plan</h2><p>Parts and constraints.</p><script>throw new Error("must not execute")</script></article>`;export{e as default};';
+  const options = { url: site + "/sky-blog", adapter: "skyfall_blog", publishedAtUtcOffset: "+00:00", allowUrlPrefixes: [site + "/blog/"] };
+  assert.deepEqual(unsupportedConfig("web_list", options), []);
+  const posts = await fetchWebList(source(options));
+  assert.deepEqual(posts.map(p => [p.url, p.title, p.publicationTime, p.bodyStatus]), [
+    [site + "/blog/new-model", "A new engineering model", "2026-10-19", "ok"],
+    [site + "/blog/older-model", "An older model", "2026-09-30", "ok"],
+  ]);
+  assert.equal(posts[0]!.excerpt, "A design plan, with `parts`");
+  assert.match(posts[0]!.bodyText!, /Parts and constraints/);
+  assert.doesNotMatch(posts[0]!.bodyHtml!, /<script|must not execute/);
+  assert.doesNotMatch(posts[0]!.bodyText!, /Previous release/);
+});
+
+test("a changed blog chunk is discovered from the entry and missing data fails instead of collecting menus", async () => {
+  pages["/sky-changed"] = () => '<script type="module" src="/assets/index-v2.js"></script><a href="/">Menu</a>';
+  pages["/assets/index-v2.js"] = () => 'const Blog=()=>import("./BlogPage-v2.js");';
+  pages["/assets/BlogPage-v2.js"] = () => 'var p={slug:"second-model",title:"Second model",author:"Research",date:"Oct 20, 2026",iso:"2026-10-20",excerpt:"New release",html:"<p>Second model.</p>"};';
+  const options = { url: site + "/sky-changed", adapter: "skyfall_blog", publishedAtUtcOffset: "+00:00" };
+  assert.equal((await fetchWebList(source(options)))[0]!.title, "Second model");
+  pages["/assets/BlogPage-v2.js"] = () => 'var p={slug:`unsafe`,title:`${throwIfExecuted()}`,author:`Research`,date:`Oct 20, 2026`,iso:`2026-10-20`,excerpt:`Bad`,html:``};';
+  await assert.rejects(fetchWebList(source(options)), /no dated posts/);
+  pages["/assets/index-v2.js"] = () => 'const changed = true;';
+  await assert.rejects(fetchWebList(source(options)), /no blog chunk/);
+});
+
+test("a script-rendered blog refuses module addresses outside its own assets", async () => {
+  pages["/sky-external"] = () => '<script type="module" src="https://unrelated.example/assets/index.js"></script>';
+  await assert.rejects(fetchWebList(source({ url: site + "/sky-external", adapter: "skyfall_blog" })), /unexpected script address/);
+});

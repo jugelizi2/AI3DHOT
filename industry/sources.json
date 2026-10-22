@@ -1,5 +1,5 @@
 {
-  "$comment": "AI3DHOT 行业信源。2026-10-20：已确认新增 8 个 X，全部按每日一次及三维相关查询配置。首次最多 3 条/3 个月，全文权限关闭。种子只新增，不覆盖已有设置。详见 docs/ai3d-sources.md。",
+  "$comment": "AI3DHOT 行业信源。2026-10-22：补充 Skyfall / SKY-001、工程 AI 与 CAD Agent 来源，以及跨账号 X 主题发现。全部每日一次、摘要及原文链接；首次最多 3 条，一般 3 个月，低频官方来源 12 个月。种子只新增，详见 docs/ai3d-sources.md。",
   "sources": [
     {
       "participation_mode": "editorial",
@@ -1410,6 +1410,324 @@
       "owner_entity_id": "sidefx",
       "tags": [
         "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-skyfall",
+      "name": "Skyfall AI · Engineering World Models",
+      "kind": "web_list",
+      "config": {
+        "url": "https://skyfall.ai/blog",
+        "adapter": "skyfall_blog",
+        "publishedAtUtcOffset": "+00:00",
+        "allowUrlPrefixes": [
+          "https://skyfall.ai/blog/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "skyfall",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-skyfall-sam",
+      "name": "X：Sam Pasupalak · Skyfall",
+      "kind": "x_search",
+      "config": {
+        "query": "from:spisallyouneed -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "person",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "skyfall",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-skyfall",
+      "name": "X：Skyfall AI · SKY-001",
+      "kind": "x_search",
+      "config": {
+        "query": "from:skyfallai -filter:replies",
+        "searchType": "Latest",
+        "publisherRole": "organization",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T1_5",
+      "owner_entity_id": "skyfall",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-aecmag",
+      "name": "AEC Magazine · AI",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://aecmag.com/feed/",
+        "allowCategories": [
+          "AI"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T2",
+      "owner_entity_id": "aecmag",
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-formas",
+      "name": "Formas · Cartesian 与 AI 建模",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.formas.ai/blog",
+        "parseMode": "html",
+        "itemSelector": "a.blog-card[href^=\"/blog/\"]",
+        "titleSelector": "h3",
+        "publishedAtSelector": ".meta-row span:first-child",
+        "publishedAtUtcOffset": "+00:00",
+        "allowUrlPrefixes": [
+          "https://www.formas.ai/blog/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "formas",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-physicsx",
+      "name": "PhysicsX · 几何与物理 AI",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.physicsx.ai/newsroom",
+        "parseMode": "html",
+        "itemSelector": ".w-dyn-item:has(a.news-item[href^=\"/newsroom/\"])",
+        "linkSelector": "a.news-item[href^=\"/newsroom/\"]",
+        "titleSelector": ".news-item-title",
+        "publishedAtSelector": ".w-condition-invisible .news-item-date",
+        "publishedAtUtcOffset": "+00:00",
+        "allowUrlPrefixes": [
+          "https://www.physicsx.ai/newsroom/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "physicsx",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "rss-leap71",
+      "name": "LEAP71 · Noyron 计算工程",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://leap71.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 12
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "leap71",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-neural-concept",
+      "name": "Neural Concept · 官方发布",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.neuralconcept.com/newsroom/press-releases",
+        "parseMode": "html",
+        "itemSelector": "article.nc-list__row",
+        "linkSelector": "h2 a",
+        "titleSelector": "h2",
+        "allowUrlPrefixes": [
+          "https://www.neuralconcept.com/press-release/"
+        ],
+        "detail": {
+          "maxFetches": 3,
+          "publishedAtSelector": "time[datetime]",
+          "publishedAtAuthoritative": true,
+          "publishedAtUtcOffset": "+00:00"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 12
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "neural-concept",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "web-oda-mcp",
+      "name": "Open Design Alliance · CAD/BIM Agent 与 MCP",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.opendesign.com/blog/tag/mcp",
+        "parseMode": "html",
+        "itemSelector": ".blog-post-card",
+        "linkSelector": "a.post-title",
+        "titleSelector": "a.post-title",
+        "publishedAtSelector": ".post-date",
+        "publishedAtUtcOffset": "+00:00",
+        "allowUrlPrefixes": [
+          "https://www.opendesign.com/blog/20"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "sortByPublishedAt": true,
+        "acceptLanguage": "en-US,en;q=0.9"
+      },
+      "tier": "T1",
+      "owner_entity_id": "oda",
+      "tags": [
+        "官方/研究"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-discover-engineering",
+      "name": "X 主题发现：AI CAD / BIM / 工程世界模型",
+      "kind": "x_search",
+      "config": {
+        "query": "(CAD OR BIM OR \"text-to-cad\") (AI OR agent OR \"world model\" OR \"foundation model\") -filter:replies -filter:retweets",
+        "searchType": "Latest",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "tags": [
+        "媒体/社区"
+      ]
+    },
+    {
+      "participation_mode": "editorial",
+      "interval_minutes": 1440,
+      "site_fulltext": false,
+      "syndicate_fulltext": false,
+      "enabled": true,
+      "id": "x-discover-3d",
+      "name": "X 主题发现：三维生成与建模发布",
+      "kind": "x_search",
+      "config": {
+        "query": "(\"text-to-3D\" OR \"image-to-3D\" OR \"3D generation\" OR Hunyuan3D OR \"3D foundation model\" OR (TRELLIS 3D)) (model OR release OR launch OR paper) min_faves:5 -filter:replies -filter:retweets -discount -coupon -giveaway -airdrop",
+        "searchType": "Latest",
+        "_aihot": {
+          "initialBackfillLimit": 3,
+          "initialBackfillMonths": 3
+        },
+        "ingestNoiseFilter": {
+          "dropMarkersTitleOnly": [
+            "discount matrix",
+            "link-page test",
+            "coupon",
+            "giveaway",
+            "airdrop"
+          ]
+        }
+      },
+      "tier": "T2",
+      "owner_entity_id": null,
+      "tags": [
+        "媒体/社区"
       ]
     }
   ]

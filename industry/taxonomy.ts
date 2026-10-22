@@ -89,6 +89,13 @@ export const TAG_SYNONYMS: Readonly<Record<string, string>> = {
  * 所有这些名字都用来认出说的是哪家公司，比如把事实的主体对到发布方。
  */
 export const ENTITIES: Record<string, { name: string; displayTag: string | null; aliases: string[]; orgNames?: string[]; otherNames?: string[] }> = {
+  "skyfall": { name: "Skyfall AI", displayTag: "Skyfall", aliases: ["Skyfall AI", "Skyfall", "SKY-001", "SKY001", "Sam Pasupalak"], orgNames: ["Skyfall AI", "Skyfall Research"], otherNames: ["skyfallai", "spisallyouneed"] },
+  "aecmag": { name: "AEC Magazine", displayTag: null, aliases: ["AEC Magazine"] },
+  "formas": { name: "Formas / Cartesian", displayTag: "Formas", aliases: ["Formas", "FORMAS.AI", "Cartesian by Formas"], orgNames: ["FORMAS.AI", "Formas"] },
+  "physicsx": { name: "PhysicsX", displayTag: "PhysicsX", aliases: ["PhysicsX", "Physics X", "LGM-Aero"], orgNames: ["PhysicsX"] },
+  "leap71": { name: "LEAP71", displayTag: "LEAP71", aliases: ["LEAP71", "LEAP 71", "LEAP 71", "Noyron", "PicoGK"], orgNames: ["LEAP71", "LEAP 71", "LEAP 71"] },
+  "neural-concept": { name: "Neural Concept", displayTag: "Neural Concept", aliases: ["Neural Concept", "Neural Concept Shape"], orgNames: ["Neural Concept"] },
+  "oda": { name: "Open Design Alliance", displayTag: "ODA", aliases: ["Open Design Alliance", "ODA MCP Servers"], orgNames: ["Open Design Alliance", "ODA"] },
   "nerfstudio": {"name":"Nerfstudio","displayTag":null,"aliases":["Nerfstudio","nerfstudioteam"],"orgNames":["Nerfstudio"]},
   "kijai": {"name":"Jukka Seppänen / Kijai","displayTag":null,"aliases":["Jukka Seppänen","Kijai","kijaidesign"]},
   "lichtfeld": {"name":"LichtFeld Studio","displayTag":null,"aliases":["LichtFeld Studio","LichtFeld","janusch_patas"],"orgNames":["LichtFeld Studio"]},
